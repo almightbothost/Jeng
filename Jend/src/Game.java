@@ -1,9 +1,16 @@
 import org.lwjgl.glfw.GLFW;
 
 public class Game {
-    public static boolean pointColliding(int id, float x, float y){
-        return(rooms.rooms.get(id).get((int)Math.floor(x)+((int)Math.floor(y)*rooms.rooms.get(id).get(0))+2)==1);
-    }public static boolean isKeyDown(int key) {
+    public static float playerx;
+    public static float playery;
+    public static long frametime;
+    public static long ms = 0;
+    public static boolean isKeyDown(int key) {
         return GLFW.glfwGetKey(Main.window, key) == GLFW.GLFW_PRESS;
+    }public static void nextInstance() throws Exception{
+        frametime=System.nanoTime()-(ms);
+        ms=System.nanoTime();
+        System.out.println(1000000000/frametime);
+        Render.rendermap(Map.Maps.get(0),10,10);
     }
 }

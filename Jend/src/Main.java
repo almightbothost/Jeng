@@ -2,7 +2,6 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-
 import java.nio.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -15,7 +14,7 @@ public class Main {
 	// The window handle
 	public static long window;
 	public static String game = System.getProperty("user.dir");
-	public static double ms;
+	public static float ms;
 	public static float xvol=0;
 	public static float yvol=0;
 	public static float xpos=0;
@@ -80,7 +79,6 @@ public class Main {
 					(vidmode.width() - pWidth.get(0)) / 2,
 					(vidmode.height() - pHeight.get(0)) / 2);
 		} // the stack frame is popped automatically
-
 		// Make the OpenGL context current
 		glfwMakeContextCurrent(window);
 		// Enable v-sync
@@ -88,8 +86,6 @@ public class Main {
 
 		// Make the window visible
 		glfwShowWindow(window);
-		Render.loadimages();
-		rooms.loadmaps();
 	}
 
 	private void loop() throws Exception {
@@ -100,27 +96,21 @@ public class Main {
 		// bindings available for use.
 		GL.createCapabilities();
 
+		Render.loadimages(
+			game + "/rsrc/img/tile/tilemap.png",
+			game + "/rsrc/img/tile/download.png"
+		);
+
 		// Set the clear color
-		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
-		long frametime = 0;
+		Map.loadmaps(game + "/rsrc/maps/map.dat");
 		while (!glfwWindowShouldClose(window)){
-			ms=(double)(frametime-(frametime=System.nanoTime()))/-1000000.0;
-			System.out.println((int)(1000/ms));
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			if(Game.isKeyDown(87))
-			if(Game.isKeyDown(65))
-			if(Game.isKeyDown(83))
-			if(Game.isKeyDown(68))
-			xpos+=xvol;
-			ypos+=yvol;
-			Render.drawimage(1, xpos-xcam, ypos-ycam, 16, 16, 16, 0, 16, 16, 0, 0, 0);
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
+			Game.nextInstance();
 			glfwSwapBuffers(window);
-
 			glfwPollEvents();
 		}
 	}

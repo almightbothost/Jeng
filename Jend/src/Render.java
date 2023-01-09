@@ -1,73 +1,39 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.Color;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class Render {
-    public static ArrayList<ArrayList<Integer>> imgdata = new ArrayList<ArrayList<Integer>>();
-    public static ArrayList<File> imgs = new ArrayList<File>();
-    public static void loadimages() throws Exception {
-
-        imgs.add(new File(Main.game+"/rsrc/img/tile/download.png"));
-        imgs.add(new File(Main.game+"/rsrc/img/tile/tilemap.png"));
-
-        for(int i=0; i<imgs.size(); i++){
-                BufferedImage img = ImageIO.read(imgs.get(i));
-                ArrayList<Integer> curimgdata = new ArrayList<Integer>();
-                curimgdata.add(img.getWidth());
-                curimgdata.add(img.getHeight());
-                for(int y=0; y<img.getHeight(); y++){
-                    for(int x=0; x<img.getWidth(); x++){
-                        Color c = new Color(img.getRGB(x,y));
-                        curimgdata.add(c.getRed());
-                        curimgdata.add(c.getGreen());
-                        curimgdata.add(c.getBlue());
-                        curimgdata.add(c.getAlpha());
-                    }
-                }imgdata.add(curimgdata);
-
+    private static ArrayList<Texture> imgs = new ArrayList<Texture>();
+    public static void loadimages(String... dirs) throws IOException{
+        for(int i = 0; i < dirs.length; i++){
+            imgs.add(new Texture(new File(dirs[i])));
         }
-    }public static void drawimage(int id, double x, double y, double w, double h, int dx, int dy, int dw, int dh, double cx, double cy, double angle)throws Exception {
-        if(imgdata.get(id).get(0)==-1){
-            for(int i=0; i<dh; i++){
-                for(int a=0; a<dw; a++){
-                    glBegin(GL_QUADS);
-                        if(a%2==0^i%2==0)glColor4d(1,0,1,0);
-                        else glColor4d(0,0,0,0);
-                        glVertex2d((x+(a*(w/dw)-(w/2)))/120,(-y+(i*(-h/dh)+(h/2)))/80);
-                        glVertex2d((x+((a+1)*(w/dw)-(w/2)))/120,(-y+(i*(-h/dh)+(h/2)))/80);
-                        glVertex2d((x+((a+1)*(w/dw)-(w/2)))/120,(-y+((i+1)*(-h/dh)+(h/2)))/80);
-                        glVertex2d((x+(a*(w/dw)-(w/2)))/120,(-y+((i+1)*(-h/dh)+(h/2)))/80);
-                    glEnd();
-                }
+    }public static void drawimage4v(int id, float tlx , float tly , float blx , float bly , float brx , float bry , float trx , float tr_y, int dx, int dy, int dw, int dh){imgs.get(id).render(tlx ,tly ,blx ,bly ,brx ,bry ,trx ,tr_y, dx, dy, dw, dh);}
+    public static void drawimage(int id, float x, float y, float w, float h, int dx, int dy, int dw, int dh, float angle, boolean centered){
+        float x0, y0, x1, y1;
+    if(centered){
+        x0=-w/2;
+        y0=-h/2;
+        x1=+w/2;
+        y1=+h/2;
+    }else{
+        x0=0;
+        y0=0;
+        x1=w;
+        y1=h;
+    }imgs.get(id).render(
+        (float)(x+(x0*Math.cos(Math.toRadians(-angle)))-(y0*Math.sin(Math.toRadians(-angle)))),(float)(y+(x0*Math.sin(Math.toRadians(-angle)))+(y0*Math.cos(Math.toRadians(-angle)))),
+        (float)(x+(x0*Math.cos(Math.toRadians(-angle)))-(y1*Math.sin(Math.toRadians(-angle)))),(float)(y+(x0*Math.sin(Math.toRadians(-angle)))+(y1*Math.cos(Math.toRadians(-angle)))),
+        (float)(x+(x1*Math.cos(Math.toRadians(-angle)))-(y1*Math.sin(Math.toRadians(-angle)))),(float)(y+(x1*Math.sin(Math.toRadians(-angle)))+(y1*Math.cos(Math.toRadians(-angle)))),
+        (float)(x+(x1*Math.cos(Math.toRadians(-angle)))-(y0*Math.sin(Math.toRadians(-angle)))),(float)(y+(x1*Math.sin(Math.toRadians(-angle)))+(y0*Math.cos(Math.toRadians(-angle)))),
+        dx,dy,dw,dh);
+    }public static void rendermap(Map map, float x, float y) throws Exception{
+        for(int i = 0; i < 12; i++){
+            for(int a = 0; a < 17; a++){
+                drawimage(map.tilemapid,(((float)a)/15)*2-1, -((float)i)/5+1, 2f/15, 1f/5, map.gettileid(a, i), map.gettileid(a, i), 16, 16, 0, false);
+                System.out.println("\ntile #"+(i*17+a));
             }
-        }else for(int i=0; i<dh; i++){
-            if(dx+dw>imgdata.get(id).get(0)){
-                System.err.println("selection out of bounds!");
-                return;
-            }if(dy+dh>imgdata.get(id).get(1)){
-                System.err.println("selection out of bounds!");
-                return;
-            }for(int a=0; a<dw; a++){
-                double r = (double)imgdata.get(id).get(4*(a+(i*imgdata.get(id).get(0)))+2)/255;
-                double g = (double)imgdata.get(id).get(4*(a+(i*imgdata.get(id).get(0)))+3)/255;
-                double b = (double)imgdata.get(id).get(4*(a+(i*imgdata.get(id).get(0)))+4)/255;
-                double alf = (double)imgdata.get(id).get(4*(a+(i*imgdata.get(id).get(0)))+5)/255;
-                glBegin(GL_QUADS);
-                    glColor4d(r,g,b,alf);
-                    glVertex2d((x+(a*(w/dw)))/120,(-y+(i*(-h/dh)))/80);
-                    glVertex2d((x+((a+1)*(w/dw)))/120,(-y+(i*(-h/dh)))/80);
-                    glVertex2d((x+((a+1)*(w/dw)))/120,(-y+((i+1)*(-h/dh)))/80);
-                    glVertex2d((x+(a*(w/dw)))/120,(-y+((i+1)*(-h/dh)))/80);
-                glEnd();
-            }
-        }
-    }public static void loadmap(int x, int y)throws Exception {
-        for(int i=0; i<16; i++){
-
         }
     }
 }
+
