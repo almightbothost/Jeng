@@ -35,14 +35,17 @@ public class Texture {
             bybuf.put((byte)0);
             bybuf.put((byte)255);
             bybuf.put((byte)255);
+
             bybuf.put((byte)0);
             bybuf.put((byte)0);
             bybuf.put((byte)0);
             bybuf.put((byte)255);
+
             bybuf.put((byte)0);
             bybuf.put((byte)0);
             bybuf.put((byte)0);
             bybuf.put((byte)255);
+            
             bybuf.put((byte)255);
             bybuf.put((byte)0);
             bybuf.put((byte)255);
@@ -62,18 +65,19 @@ public class Texture {
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D,  textureID);
         glBegin(GL_QUADS);
-            glVertex2f(v0x,v0y);
+
             glTexCoord2f((float)dx/width,(float)(dy+dh)/height);
-            System.out.println("\n"+dx+", "+(dy+dh)+", "+v0x+", "+v0y);
-            glVertex2f(v1x,v1y);
+            glVertex2f(v0x,v0y);
+            
             glTexCoord2f((float)(dx+dw)/width,(float)(dy+dh)/height);
-            System.out.println((dx+dw)+", "+(dy+dh)+", "+v1x+", "+v1y);
-            glVertex2f(v2x,v2y);
+            glVertex2f(v1x,v1y);
+            
             glTexCoord2f((float)(dx+dw)/width,(float)dy/height);
-            System.out.println((dx+dw)+", "+dy+", "+v2x+", "+v2y);
-            glVertex2f(v3x,v3y);
+            glVertex2f(v2x,v2y);
+            
             glTexCoord2f((float)dx/width,(float)dy/height);
-            System.out.println(dx+", "+dy+", "+v3x+", "+v3y);
+            glVertex2f(v3x,v3y);
+            
         glEnd();
     }
 }

@@ -23,15 +23,16 @@ public class Render {
         y1=h;
     }imgs.get(id).render(
         (float)(x+(x0*Math.cos(Math.toRadians(-angle)))-(y0*Math.sin(Math.toRadians(-angle)))),(float)(y+(x0*Math.sin(Math.toRadians(-angle)))+(y0*Math.cos(Math.toRadians(-angle)))),
-        (float)(x+(x0*Math.cos(Math.toRadians(-angle)))-(y1*Math.sin(Math.toRadians(-angle)))),(float)(y+(x0*Math.sin(Math.toRadians(-angle)))+(y1*Math.cos(Math.toRadians(-angle)))),
-        (float)(x+(x1*Math.cos(Math.toRadians(-angle)))-(y1*Math.sin(Math.toRadians(-angle)))),(float)(y+(x1*Math.sin(Math.toRadians(-angle)))+(y1*Math.cos(Math.toRadians(-angle)))),
         (float)(x+(x1*Math.cos(Math.toRadians(-angle)))-(y0*Math.sin(Math.toRadians(-angle)))),(float)(y+(x1*Math.sin(Math.toRadians(-angle)))+(y0*Math.cos(Math.toRadians(-angle)))),
+        (float)(x+(x1*Math.cos(Math.toRadians(-angle)))-(y1*Math.sin(Math.toRadians(-angle)))),(float)(y+(x1*Math.sin(Math.toRadians(-angle)))+(y1*Math.cos(Math.toRadians(-angle)))),
+        (float)(x+(x0*Math.cos(Math.toRadians(-angle)))-(y1*Math.sin(Math.toRadians(-angle)))),(float)(y+(x0*Math.sin(Math.toRadians(-angle)))+(y1*Math.cos(Math.toRadians(-angle)))),
         dx,dy,dw,dh);
     }public static void rendermap(Map map, float x, float y) throws Exception{
-        for(int i = 0; i < 12; i++){
-            for(int a = 0; a < 17; a++){
-                drawimage(map.tilemapid,(((float)a)/15)*2-1, -((float)i)/5+1, 2f/15, 1f/5, map.gettileid(a, i), map.gettileid(a, i), 16, 16, 0, false);
-                System.out.println("\ntile #"+(i*17+a));
+        x = (float)Math.min(Math.max(8.5,x),(float)map.width-6.5001);
+        y = (float)Math.min(Math.max(6,y),(float)map.height-4.0001);
+        for(int i = 0; i < 11; i++){
+            for(int a = 0; a < 16; a++){
+                drawimage(map.tilemapid,(((float)a-((x+0.5f)%1))/15)*2-1, -((float)i-(y%1)+1)/5+1, 2f/15, 1f/5, map.gettileid((int)(a+x-8.5f), (int)(i+y-6))%8*16, map.gettileid((int)(a+x-8.5f), (int)(i+y-6))/8*16, 16, 16, 0, false);
             }
         }
     }
