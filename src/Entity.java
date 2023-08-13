@@ -4,6 +4,7 @@ import java.io.Serializable;
 public class Entity implements Serializable{
     public boolean DestroyQue = false;
     public String name;
+
     public float health;
     public float defence;
     public float speed;

@@ -19,7 +19,7 @@ public class Table<E> implements Serializable{
         this.height = height;
     }public Table(){
     }public E get(int x, int y)throws Exception{
-        if(x>=width||x<0||y>=height||y<0)throw new Exception("Table selection out of range."); 
+        if(x>=width||x<0||y>=height||y<0)return(null);
         return Data.get(width*y+x);
     }public void set(int x, int y, E... data)throws Exception{
         if(x>=width||x<0||y>=height||y<0)throw new Exception("Table selection out of range."); 

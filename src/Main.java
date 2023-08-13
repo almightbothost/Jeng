@@ -96,17 +96,14 @@ public class Main {
 		// bindings available for use.
 		GL.createCapabilities();
 
-		Render.loadimages(
-			game + "/rsrc/img/tile/tilemap.png",
-			game + "/rsrc/img/tile/download.png"
-		);
+		
 
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
-		Map.loadmaps(game + "/rsrc/maps/map.dat");
+		Game.init();
 		while (!glfwWindowShouldClose(window)){
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			Game.nextInstance();

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Map implements Serializable{
     public static final long serialVersionUID = 42L;
     public static ArrayList<Map> Maps = new ArrayList<Map>();
-    public static void loadmaps(String... dirs) throws ClassNotFoundException, IOException{
+    public static void loadMaps(String... dirs) throws ClassNotFoundException, IOException{
         for(int i = 0; i < dirs.length; i++){
             Maps.add(ReadWrite.Read(dirs[i]));
         }
@@ -27,5 +27,21 @@ public class Map implements Serializable{
         visualdata.set(x, y, data);
     }public void setcollision(int x, int y, boolean data) throws Exception{
         collisiondata.set(x, y, data);
+    }public void render(float x, float y) throws Exception{
+        for(int i = 0; i < 11; i++){
+            for(int a = 0; a < 16; a++){
+                try{
+                    try{
+                        Tilemap.Tilemaps.get(tilemapid).tiles.get(visualdata.get((int)((float)a+x-7.5f),(int)(i+y-5))).render((float)((a-(x+0.5)%1)*2)/15-1, -(float)(i-(y%1)+1)/5+1, 2f/15, 1f/5);
+                    }catch(NullPointerException n){}
+                }catch(Exception e){
+                    try{
+                        Tilemap.Tilemaps.get(tilemapid).tiles.get(0).render((float)((a-(x+0.5)%1)*2)/15-1, -(float)(i-(y%1)+1)/5+1, 2f/15, 1f/5);
+                    }catch(Exception o){
+                        throw new Exception("Fatal error in rendering texture");
+                    }
+                }
+            }
+        }
     }
 }
